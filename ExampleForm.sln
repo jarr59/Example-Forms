@@ -5,9 +5,9 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Interfaces", "Interfaces", "{CCCBE9EC-F40D-439E-B500-FE5501EE9E13}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleForms.Web", "ExampleForms.Web\ExampleForms.Web.csproj", "{5AAAC987-908D-4B78-97D2-6BF2AF3B0FC8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleForms.Web", "ExampleForms.Web\ExampleForms.Web.csproj", "{5AAAC987-908D-4B78-97D2-6BF2AF3B0FC8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleForm", "ExampleForm\ExampleForm.csproj", "{F153938C-792E-4E1E-913C-19F95C4828D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleForm", "ExampleForm\ExampleForm.csproj", "{F153938C-792E-4E1E-913C-19F95C4828D9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

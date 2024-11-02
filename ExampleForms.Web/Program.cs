@@ -1,12 +1,19 @@
+using ExampleForm.FakestoreApi.Sdks;
 using ExampleForms.Web.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
+using Refit;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
 builder.Services.AddFluentUIComponents();
+
+builder.Services
+    .AddRefitClient<IFakestoreProductSdk>()
+    .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://fakestoreapi.com/"));
 
 var app = builder.Build();
 

@@ -6,4 +6,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Refit" Version="7.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="FakestoreApi\Queries\" />
+  </ItemGroup>
+
 </Project>
