@@ -1,0 +1,91 @@
+﻿@using ExampleForm.FakestoreApi
+@using ExampleForm.FakestoreApi.Commands.Products
+@using ExampleForm.FakestoreApi.Sdks
+@using ExampleForms.Web.Example.Components.ViewModels
+@inject IFakestoreProductSdk IFakestoreProductSdk
+
+<EditForm Model="ProductFormVm" OnValidSubmit="OnValidSubmit">
+
+    <FluentValidationValidator/>
+
+    @if (string.IsNullOrEmpty(MessageError) == false)
+    {
+        <p>Occurio un error inesperado: @MessageError</p>
+    }    
+    
+    @if (ProductIdCreated > 0)
+    {
+        <p>Product Creado con exito: @ProductIdCreated</p>
+    }
+
+    <div style="padding: 6px;">
+
+        <label>Nombre de producto</label>
+
+        <InputText DisplayName="Nombre de producto" @bind-Value="ProductFormVm.Title" />
+
+        <ValidationMessage For="(() => ProductFormVm.Title)" />
+    </div>
+    
+    <div>
+        @if (ProductIsLoading)
+        {
+            <p>Cargando...</p>
+        }
+        else
+        {
+            <button type="submit">Guardar</button>
+        }
+    </div>
+
+</EditForm>
+
+@code {
+    /// <summary>
+    /// Representa el viewmodel de formulario
+    /// </summary>
+    ProductFormVm ProductFormVm = new();
+
+    /// <summary>
+    /// Representa el id del producto creado
+    /// </summary>
+    int ProductIdCreated = 0;
+
+    /// <summary>
+    /// Representa el mensaje de error del api
+    /// </summary>
+    string MessageError = string.Empty;
+
+    /// <summary>
+    /// Indica si el producto se esta cargando o guardando
+    /// </summary>
+    bool ProductIsLoading = false;
+
+    /// <summary>
+    /// Metodo que escucha el evento <see cref="EditForm.OnValidSubmit"/>
+    /// </summary>
+    /// <returns></returns>
+    async Task OnValidSubmit()
+    {
+        ProductIsLoading = true;
+        //Llamada al api
+        try
+        {
+            CreateProduct createProduct = new(Title: ProductFormVm.Title,
+                                              Price: ProductFormVm.Price,
+                                              Description: ProductFormVm.Description,
+                                              Image: ProductFormVm.Image,
+                                              Category: ProductFormVm.Category);
+
+            ProductOutput productCreated = await IFakestoreProductSdk.CreateProduct(createProduct);
+
+            ProductIdCreated = productCreated.Id;
+        }
+        catch (ApiException ex)
+        {
+            MessageError = ex.Content ?? ex.Message;
+        }
+
+        ProductIsLoading = false;
+    }
+}
