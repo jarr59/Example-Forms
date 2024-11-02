@@ -1,0 +1,59 @@
+﻿@using System.Net
+@if (string.IsNullOrEmpty(MessageError) == false)
+{
+    <FluentMessageBar Title="ApiException: "
+                      Intent="@MessageIntent.Error">
+        @MessageError
+    </FluentMessageBar>
+}
+
+<div class="input-group mb-3">
+
+    <FluentStack Orientation="Orientation.Horizontal">
+
+        <FluentSelect AriaLabel="ApiException"
+                      Label="Indica si se debe simular una exepcion de api: "
+                      Items="@HttpStatusCodes"
+                      Id="Category-Select"
+                      Placeholder="Seleccione una excepcion"
+                      OptionValue="@(e => e.Key)"
+                      OptionText="@(e => e.Value)"
+                      @bind-Value="SimulateApiException"
+                      SelectedOptionChanged="OnSelectApiException"
+                      Class="form-control" />
+
+    </FluentStack>
+</div>
+
+@code {
+
+    /// <summary>
+    /// Indica si hay un mensaje de error
+    /// </summary>
+    [Parameter]
+    public string? MessageError { get; set; }
+
+    /// <summary>
+    /// Indica si hay un mensaje de error
+    /// </summary>
+    [Parameter]
+    public string? SimulateApiException { get; set; }
+
+    /// <summary>
+    /// Evento que se levanta al sleecionar una Excepcion
+    /// </summary>
+    [Parameter]
+    public EventCallback<KeyValuePair<string, string>> OnSelectApiException { get; set; }
+
+    /// <summary>
+    /// Excepcion disponibles
+    /// </summary>
+    List<KeyValuePair<string, string>> HttpStatusCodes = new()
+    {
+        new(HttpStatusCode.OK.ToString(), HttpStatusCode.OK.ToString()),
+        new(HttpStatusCode.BadRequest.ToString(), HttpStatusCode.BadRequest.ToString()),
+        new(HttpStatusCode.NotFound.ToString(), HttpStatusCode.NotFound.ToString()),
+        new(HttpStatusCode.InternalServerError.ToString(), HttpStatusCode.InternalServerError.ToString())
+    };
+
+}

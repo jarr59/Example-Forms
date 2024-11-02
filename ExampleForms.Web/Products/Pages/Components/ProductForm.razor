@@ -1,0 +1,266 @@
+﻿@inject IFakestoreProductSdk IFakestoreProductSdk
+
+<EditForm Model="ProductFormVm" OnValidSubmit="OnValidSubmit" FormName="product_creation_form">    
+
+    <FluentValidationValidator />
+
+
+    <div style="padding: 40px">
+
+        <FluentCard MinimalStyle="true">
+            <p>Este card no son propiedades del formulario son opcionales para simular cierto estados</p>
+            <ApiExeceptionSelection MessageError="@MessageError"
+                                    SimulateApiException="@SimulateApiException"
+                                    OnSelectApiException="@((arg) => { SimulateApiException = arg.Key; StateHasChanged(); })" />
+        </FluentCard>
+
+    </div>
+
+
+
+    <h1>FORMULARIO DE PRODUCTOS</h1>
+
+    <div style="padding: 40px">
+
+        <FluentCard MinimalStyle="true" Width="800px" Height="600px">
+
+            <ValidationSummary></ValidationSummary>
+
+            <FluentStack Orientation="Orientation.Vertical">
+
+                @if (string.IsNullOrEmpty(ProductId) == false)
+                {
+                    <div class="input-group mb-3">
+
+                        <FluentStack Orientation="Orientation.Horizontal">
+
+                            <FluentLabel Disabled="true">Id De Producto: @ProductId</FluentLabel>
+
+                        </FluentStack>
+
+                    </div>
+                }
+
+                <div class="input-group mb-3">
+
+                    <FluentStack Orientation="Orientation.Horizontal">
+
+                        <FluentTextField AriaLabel="Title"
+                                         @bind-Value="ProductFormVm.Title"
+                                         Label="Nombre De Producto:"
+                                         Class="form-control" />
+
+                    </FluentStack>
+
+                    <FluentValidationMessage For="@(() => ProductFormVm.Title)" />
+
+                </div>
+
+                <div class="input-group mb-3">
+
+                    <FluentStack Orientation="Orientation.Horizontal">
+
+                        <FluentNumberField AriaLabel="Price"
+                                           @bind-Value="ProductFormVm.Price"
+                                           Label="Precio De Producto: "
+                                           Step=1.00
+                                           class="form-control" />
+                    </FluentStack>
+
+                    <FluentValidationMessage For="@(() => ProductFormVm.Price)" />
+
+                </div>
+
+
+                <div class="input-group mb-3">
+
+                    <FluentStack Orientation="Orientation.Horizontal">
+
+                        <FluentTextArea AriaLabel="Description"
+                                        @bind-Value="ProductFormVm.Description"
+                                        Label="Descripcion: "
+                                        Class="form-control" />
+
+                    </FluentStack>
+
+                    <FluentValidationMessage For="@(() => ProductFormVm.Description)" />
+
+                </div>
+
+                <div class="input-group mb-3">
+
+                    <FluentStack Orientation="Orientation.Horizontal">
+
+                        <FluentTextField AriaLabel="UrlImage"
+                                         @bind-Value="ProductFormVm.Image"
+                                         Label="Imagen De Producto: "
+                                         Class="form-control" />
+                    </FluentStack>
+
+                    <FluentValidationMessage For="@(() => ProductFormVm.Image)" />
+                </div>
+
+                <div class="input-group mb-3">
+
+                    @if (CategoriesIsLoading)
+                    {
+                        <FluentStack Orientation="Orientation.Vertical">
+
+                            <FluentLabel>Cargando categorias...</FluentLabel>
+                            <FluentProgressRing />
+
+                        </FluentStack>
+
+                    }
+                    else
+                    {
+                        <FluentStack Orientation="Orientation.Horizontal">
+
+                            <FluentSelect AriaLabel="Category"
+                                          Label="Categoria Del Producto: "
+                                          Items="Categories"
+                                          Id="Category-Select"
+                                          Placeholder="Seleccione una categoria"
+                                          OptionValue="@(e => e.Key)"
+                                          OptionText="@(e => e.Value)"
+                                          @bind-Value="ProductFormVm.Category"
+                                          Class="form-control" 
+                                          Position="SelectPosition.Below"/>
+                        </FluentStack>
+
+                    }
+
+                    <FluentValidationMessage For="@(() => ProductFormVm.Category)" />
+                </div>
+
+                <div class="mb-3">
+                    @if (CategoriesIsLoading || ProductIsLoading)
+                    {
+                        <FluentStack Orientation="Orientation.Vertical">
+
+                            <FluentLabel>Cargando...</FluentLabel>
+                            <FluentProgressRing />
+
+                        </FluentStack>
+
+                    }
+                    else
+                    {
+                        <FluentButton Type="ButtonType.Submit"
+                                      Appearance="Appearance.Accent">Submit</FluentButton>
+                    }
+                </div>
+
+            </FluentStack>
+        </FluentCard>
+    </div>
+
+
+</EditForm>
+
+@code {
+    /// <summary>
+    /// Representa el producto a actualizar
+    /// </summary>
+    [Parameter]
+    public string? ProductId { get; set; }
+
+    /// <summary>
+    /// Dispara un evento de callback cuando se termina de crear/actualizar el producto
+    /// </summary>
+    [Parameter]
+    public EventCallback<ProductOutput> OnSaveChanges { get; set; }
+
+    /// <summary>
+    /// Representa el vm del formulario de creacion de productos
+    /// </summary>
+    ProductFormVm ProductFormVm = new();
+
+    /// <summary>
+    /// Indica si el producto se esta cargando
+    /// </summary>
+    bool ProductIsLoading;
+
+    /// <summary>
+    /// Indica si la categoria se esta cargando
+    /// </summary>
+    bool CategoriesIsLoading;
+
+    /// <summary>
+    /// Categorias disponibles
+    /// </summary>
+    List<KeyValuePair<string, string>> Categories = [];
+
+    /// <summary>
+    /// Indica si hay un mensaje de error
+    /// </summary>
+    string MessageError = string.Empty;
+
+    /// <summary>
+    /// Indica que tipo de excepcion de api se debe simular
+    /// </summary>
+    string SimulateApiException = HttpStatusCode.OK.ToString();
+
+    /// <summary>
+    /// Metodo que se ejecuta al iniciar este componente
+    /// </summary>
+    /// <returns></returns>
+    protected override async Task OnInitializedAsync()
+    {
+        await GetCategoriesFromAnyApi();
+
+        await base.OnInitializedAsync();
+    }
+
+    /// <summary>
+    /// Simula que las categorias se cargan desde un api
+    /// </summary>
+    /// <returns></returns>
+    async Task GetCategoriesFromAnyApi()
+    {
+        CategoriesIsLoading = true;
+
+        Categories = MockValues.GetMockCategories();
+
+        //Simula que la llamada al api se tarda
+        await Task.Delay(5000);
+
+        CategoriesIsLoading = false;
+    }
+
+    /// <summary>
+    /// Metodo que escucha el evento <see cref="EditForm.OnValidSubmit">
+    /// del formulario y ejecuta las llamada al endpoint de creacion de producto
+    /// </summary>
+    /// <returns></returns>
+    async Task OnValidSubmit()
+    {
+        ProductIsLoading = true;
+
+        ///Idealmente deberias implementar ErrorBoundary para los errores
+        ///Por el momento lo manejaremos con un trycatch
+        try
+        {
+            CreateProduct createProduct = new(Title: ProductFormVm.Title,
+                                              Price: ProductFormVm.Price,
+                                              Description: ProductFormVm.Description,
+                                              Image: ProductFormVm.Image,
+                                              Category: ProductFormVm.Image);
+
+            await MockExceptions.SimulateApiException(SimulateApiException);
+
+            ProductOutput productCreate = await IFakestoreProductSdk.CreateProduct(createProduct);
+
+            //Levantamos el evento para que quien llame este componente decida que hacer luego de guardar
+            await OnSaveChanges.InvokeAsync(productCreate);
+        }
+        catch (ApiException ex)
+        {
+            MessageError = $"StatusCode: {ex.StatusCode} - Message: {ex.Content}";
+        }
+
+        ProductIsLoading = false;
+    }
+
+
+}

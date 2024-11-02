@@ -1,0 +1,22 @@
+﻿@page "/product"
+@page "/product/{ProductId}"
+@using ExampleForms.Web.Products.Pages.Components
+
+<PageTitle>@("Creacion de producto")</PageTitle>
+
+<h1>VALIDACIONES EN FORMULARIOS</h1>
+
+<p>
+    Este formulario usa el componente base de EditForm. Ademas usa <code>FluentValidation</code> y <code>Refit</code>
+</p>
+
+<ProductForm ProductId="@ProductId"/>
+
+@code {
+
+    /// <summary>
+    /// Representa el producto a actualizar
+    /// </summary>
+    [Parameter]
+    public string? ProductId { get; set; }
+}
