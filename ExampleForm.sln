@@ -3,12 +3,34 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Interfaces", "Interfaces", "{CCCBE9EC-F40D-439E-B500-FE5501EE9E13}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleForms.Web", "ExampleForms.Web\ExampleForms.Web.csproj", "{5AAAC987-908D-4B78-97D2-6BF2AF3B0FC8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleForm", "ExampleForm\ExampleForm.csproj", "{F153938C-792E-4E1E-913C-19F95C4828D9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5AAAC987-908D-4B78-97D2-6BF2AF3B0FC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AAAC987-908D-4B78-97D2-6BF2AF3B0FC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AAAC987-908D-4B78-97D2-6BF2AF3B0FC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AAAC987-908D-4B78-97D2-6BF2AF3B0FC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F153938C-792E-4E1E-913C-19F95C4828D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F153938C-792E-4E1E-913C-19F95C4828D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F153938C-792E-4E1E-913C-19F95C4828D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F153938C-792E-4E1E-913C-19F95C4828D9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5AAAC987-908D-4B78-97D2-6BF2AF3B0FC8} = {CCCBE9EC-F40D-439E-B500-FE5501EE9E13}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C3632483-49EC-4212-8822-DE1A7C3875B6}
 	EndGlobalSection
 EndGlobal
